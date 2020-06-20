@@ -2,43 +2,29 @@ rm(list=ls())
 
 # Funciones y Directorios ####  
 library(stringr)
-# library(knitr)
-# library(dplyr)
-# library(ggplot2)
-# library(reshape)
-# library(ggthemes)
-# library(R2admb)
-# library(gridExtra)
-# library(ggpubr)
 
 source('~/Documents/Rwork/Functions/Funciones/functions.R')
-# source('~/Documents/Rwork/Functions/Funciones/read.report.R')
-# source('~/Documents/Rwork/Functions/multiplot.R')
-# source('~/Documents/Rwork/Functions/read.admb.R')
+source('~/Documents/Rwork/Functions/Funciones/read.report.R')
 
-dir.1<-'~/Documents/Rwork/IFOP/nm_Francis/'
-dir.2<-'~/Documents/ADMwork/IFOP/2019/Lama_model/Cons_2003/norte/data_update/'
-dir.3<-'~/Documents/ADMwork/IFOP/2019/Lama_model/Cons_2003/norte/Lamnor2003/'
-
+dir.1<-'~/Documents/GitHub/Francis4Crabs'
+dir.2<-'~/Documents/ADMwork/IFOP/2019/Lama_model/Cons_2003/norte/Lamnor2003/'
+dir.3<-'~/Documents/ADMwork/IFOP/2019/Lama_model/Cons_2003/norte/A_Sens/A_Sens_NmEst/'
 
 #unlink(dir.3,recursive=T) #borra el dir3 del Mac
-#dir.create(file.path('~/Documents/ADMwork/IFOP/2019/Lama_model/Cons_2003/norte/','Lamnor2003')) # crea el dir3 nuevo y vacío
-setwd(dir.2); file.copy(c('lamnor2003s6.dat', 'LAM.tpl'), dir.1)
+#dir.create(file.path('~/Documents/ADMwork/IFOP/2019/Lama_model/Cons_2003/norte/','A_Sens/')) # crea el dir3 nuevo y vacío
+#dir.create(file.path('~/Documents/ADMwork/IFOP/2019/Lama_model/Cons_2003/norte/A_Sens/','A_Sens_NmEst/')) # crea el dir3 nuevo y vacío
+setwd(dir.2); file.copy(c('lamnor2003.dat', 'LAM.tpl'), dir.1)
 
 
-# Corre modelos ####
-
-# Tamaños de muestra originales (50 50 25 25)
+# Corre el modelo ####
 setwd(dir.3)
+system('~/admb/admb LAM')
+system('./LAM -ind lamnor2003.dat')
 
-#system('mv lamnor2003s6.dat lamnor2003.dat')
-
-# system('~/admb/admb LAM.tpl')
-# system('./LAM -ind lamnor2003.dat')
-dir()
 
 # ESTIMACIÓN TAMAÑO MUESTRAS ####
-dat.file      = 'lamnor1910s6.dat'
+
+dat.file      = 'lamnor2003.dat'
 data.0        <- lisread(paste(dir.3,dat.file, sep='/'));
 names(data.0) <-  str_trim(names(data.0), side="right")
 data.1        <- data.0
@@ -84,6 +70,7 @@ años <- rep(years1,length(tallas)*4)
 ind  <- c(rep("capt_obs",length(years1)*length(tallas)),
           rep("capt_est",length(years1)*length(tallas)))
 pro  <- data.frame(años,talla,ind,pFm,pFh,pRm,pRh)
+
 
 
 ##----------------- Functions -----------------------------------------------------
