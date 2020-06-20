@@ -17,8 +17,8 @@ setwd(dir.2); file.copy(c('lamnor2003.dat', 'LAM.tpl'), dir.1)
 
 
 # Corre el modelo ####
-setwd(dir.3)
-system('~/admb/admb LAM')
+setwd(dir.1)
+system('~/admb/admb LAM.tpl')
 system('./LAM -ind lamnor2003.dat')
 
 
