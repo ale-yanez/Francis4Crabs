@@ -37,10 +37,6 @@ nyears1  <- data.1$nyrs
 tallas  <- seq(10,52,1)
 ntallas <- data.1$ntallas
 
-#x  <-c(years1,rev(years1))
-#x1 <-c(years1[1],years1[nyears1]+1,nyears1+1/2) #xaxp
-#x2 <-c(years1[1]-1,years1[nyears1]+1) #xlim
-
 
 #Proporción observada                  
 pobsFm  <-rep$pobs_mflo
