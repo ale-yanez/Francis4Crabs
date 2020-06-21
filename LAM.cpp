@@ -11,6 +11,9 @@
  long hour,minute,second;
  double elapsed_time;
  ofstream mcmc_report("mcmc2.csv");
+#ifdef DEBUG
+  #include <chrono>
+#endif
 #include <admodel.h>
 #ifdef USE_ADMB_CONTRIBS
 #include <contrib.h>
@@ -23,6 +26,35 @@
 
 model_data::model_data(int argc,char * argv[]) : ad_comm(argc,argv)
 {
+  adstring tmpstring;
+  tmpstring=adprogram_name + adstring(".dat");
+  if (argc > 1)
+  {
+    int on=0;
+    if ( (on=option_match(argc,argv,"-ind"))>-1)
+    {
+      if (on>argc-2 || argv[on+1][0] == '-')
+      {
+        cerr << "Invalid input data command line option"
+                " -- ignored" << endl;
+      }
+      else
+      {
+        tmpstring = adstring(argv[on+1]);
+      }
+    }
+  }
+  global_datafile = new cifstream(tmpstring);
+  if (!global_datafile)
+  {
+    cerr << "Error: Unable to allocate global_datafile in model_data constructor.";
+    ad_exit(1);
+  }
+  if (!(*global_datafile))
+  {
+    delete global_datafile;
+    global_datafile=NULL;
+  }
   ntime.allocate("ntime");
   nedades.allocate("nedades");
   ntallas.allocate("ntallas");
@@ -99,6 +131,11 @@ void model_parameters::initializationfunction(void)
   log_sdA50cruh.set_initial_value(log_s1priorch);
   log_Mm.set_initial_value(log_M_priorm);
   log_Mh.set_initial_value(log_M_priorh);
+  if (global_datafile)
+  {
+    delete global_datafile;
+    global_datafile = NULL;
+  }
 }
 
 model_parameters::model_parameters(int sz,int argc,char * argv[]) : 
@@ -1302,6 +1339,7 @@ int main(int argc,char * argv[])
   #ifndef __SUNPRO_C
 std::feclearexcept(FE_ALL_EXCEPT);
   #endif
+  auto start = std::chrono::high_resolution_clock::now();
 #endif
     gradient_structure::set_YES_SAVE_VARIABLES_VALUES();
     if (!arrmblsize) arrmblsize=15000000;
@@ -1310,6 +1348,7 @@ std::feclearexcept(FE_ALL_EXCEPT);
     mp.preliminary_calculations();
     mp.computations(argc,argv);
 #ifdef DEBUG
+  std::cout << endl << argv[0] << " elapsed time is " << std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - start).count() << " microseconds." << endl;
   #ifndef __SUNPRO_C
 bool failedtest = false;
 if (std::fetestexcept(FE_DIVBYZERO))
