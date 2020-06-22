@@ -14,7 +14,7 @@ dir.3<-'~/Documents/ADMwork/IFOP/2019/Lama_model/Cons_2003/norte/A_Sens/A_Sens_N
 #dir.create(file.path('~/Documents/ADMwork/IFOP/2019/Lama_model/Cons_2003/norte/','A_Sens/')) # crea el dir3 nuevo y vacío
 #dir.create(file.path('~/Documents/ADMwork/IFOP/2019/Lama_model/Cons_2003/norte/A_Sens/','A_Sens_NmEst/')) # crea el dir3 nuevo y vacío
 setwd(dir.2); file.copy(c('lamnor2003.dat', 'LAM.tpl'), dir.1)
-
+   
 
 # Corre el modelo ####
 setwd(dir.1)
